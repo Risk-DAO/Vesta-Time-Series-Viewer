@@ -156,7 +156,7 @@ display_image(picture_name, "width:800px;height:580px;margin: 0 auto; display: b
 document.write("<br>")                 
 
 display_image('usd.svg', "height: 20px; margin: 5px;", 'img');
-document.write("price_recovery_time: ")
+document.write("Price recovery time (half-life, days): ")
 if(a > 0) document.write(buildLink("prev", a - 1,b,c,d,e,asset, price_recovery_time[a]))
 else document.write(buildDisabledLink("prev", price_recovery_time[a]))
 document.write(" | ")
@@ -164,18 +164,8 @@ if(a < price_recovery_time.length - 1) document.write(buildLink("next", a + 1,b,
 else document.write(buildDisabledLink("next", price_recovery_time[a]))
 document.write("<br>")                 
 
-display_image('atom.svg', "height: 20px; margin: 5px;", 'img');
-document.write("recovery_halflife_retail: ")
-
-if(b > 0) document.write(buildLink("prev", a,b-1,c,d,e,asset, recovery_halflife_retail[b]))
-else document.write(buildDisabledLink("prev", recovery_halflife_retail[b]))
-document.write(" | ")
-if(b < recovery_halflife_retail.length - 1) document.write(buildLink("next", a,b+1,c,d,e,asset,recovery_halflife_retail[b]))
-else document.write(buildDisabledLink("next", recovery_halflife_retail[b]))
-document.write("<br>")                 
-
 display_image('pool.svg', "height: 20px; margin: 5px;", 'img');
-document.write("stability_pool_initial_balance_ratio: ")
+document.write("Stability pool initial balance to debt ratio: ")
 if(c > 0) document.write(buildLink("prev", a,b,c-1,d,e,asset, stability_pool_initial_balance_ratio[c]))
 else document.write(buildDisabledLink("prev", stability_pool_initial_balance_ratio[c]))
 document.write(" | ")
@@ -184,7 +174,7 @@ else document.write(buildDisabledLink("next",stability_pool_initial_balance_rati
 document.write("<br>")                 
 
 display_image('bpro.svg', "height: 20px; margin: 5px;", 'img');
-document.write("share_institutional: ")
+document.write("B.Protocol sharel: ")
 if(d > 0) document.write(buildLink("prev", a,b,c,d-1,e,asset, share_institutional[d]))
 else document.write(buildDisabledLink("prev", share_institutional[d]))
 document.write(" | ")
@@ -192,9 +182,17 @@ if(d < share_institutional.length - 1) document.write(buildLink("next", a,b,c,d+
 else document.write(buildDisabledLink("next",share_institutional[d]))
 document.write("<br>")
 
+display_image('atom.svg', "height: 20px; margin: 5px;", 'img');
+document.write("Stability pool recovery time (half-life, days): ")
+if(b > 0) document.write(buildLink("prev", a,b-1,c,d,e,asset, recovery_halflife_retail[b]))
+else document.write(buildDisabledLink("prev", recovery_halflife_retail[b]))
+document.write(" | ")
+if(b < recovery_halflife_retail.length - 1) document.write(buildLink("next", a,b+1,c,d,e,asset,recovery_halflife_retail[b]))
+else document.write(buildDisabledLink("next", recovery_halflife_retail[b]))
+document.write("<br>")                 
 
-display_image('bpro.svg', "height: 20px; margin: 5px;", 'img');
-document.write("volume for 10 percents: ")
+display_image('summer-animal-beach.svg', "height: 20px; margin: 5px;", 'img');
+document.write("Volume for 10 percents slippage: ")
 if(e > 0) document.write(buildLink("prev", a,b,c,d, e-1,asset, slipage[e]))
 else document.write(buildDisabledLink("prev", slipage[e]))
 document.write(" | ")
