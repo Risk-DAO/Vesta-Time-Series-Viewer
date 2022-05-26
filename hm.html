@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+</head>
+<body class="container">
+<p id="demo"></p>
+<table><tr><td>
+    <a href="?asset=dpx&a=0&b=0&c=0&d=0&e=0">DPX</a>
+    <a href="?asset=btc&a=0&b=0&c=0&d=0&e=0">BTC</a>
+    <a href="?asset=eth&a=0&b=0&c=0&d=0&e=0">ETH</a>
+    <a href="?asset=gohm&a=0&b=0&c=0&d=0&e=0">GOHM</a>
+    <a href="?asset=gmx&a=0&b=0&c=0&d=0&e=0">GMX</a>
+    <a href="?asset=tri&a=0&b=0&c=0&d=0&e=0">TRI</a>
+</td></tr></table>
+
+<script>
+
+const jsons = {
+	"dpx" : {
+			"series_std_ratio": "2.64", 
+			"volume_for_slippage_10_percentss": ["350.0", "700.0"], 
+			"trade_every": "1800", 
+			"collaterals": ["1000.0", "2000.0", "4000.0", "8000.0"], 
+			"liquidation_incentives": ["0.1"], 
+			"stability_pool_initial_balances": ["0.0","0.1","0.25", "0.5"], 
+			"share_institutionals": ["0.0", "0.25", "0.5"], 
+			"recovery_halflife_retails": ["1.0", "5.0", "10.0"], 
+			"price_recovery_times": ["0.5", "1.0", "2.0", "4.0", "10.0"], 
+			"l_factors": ["0.5", "1.0", "2.0", "4.0", "6.0"]
+		},
+	"gmx":{
+			"series_std_ratio": "2.84",
+			'volume_for_slippage_10_percentss': ["150.0", "300.0"],
+			'trade_every': "1800", 
+			'collaterals': ["500.0", "1000.0", "1500.0", "2000.0", "5000.0"],
+			'liquidation_incentives': ["0.1"], 
+			"stability_pool_initial_balances": ["0.0","0.1","0.25", "0.5"],  
+			'share_institutionals': ["0.0", "0.25", "0.5"], 
+			'recovery_halflife_retails': ["1.0", "5.0", "10.0"],
+			"price_recovery_times": ["0.5", "1.0", "2.0", "4.0", "10.0"], 
+			'l_factors': ["0.5", "1.0", "2.0", "4.0", "6.0"]
+	},			
+	"gohm":{
+			'series_std_ratio': "1.15", 
+			'volume_for_slippage_10_percentss': ["20.0", "40.0"], 
+			'trade_every': "1800", 
+			'collaterals': ["500.0", "1000.0", "1500.0", "2000.0", "5000.0"], 
+			'liquidation_incentives': ["0.1"], 
+			'stability_pool_initial_balances': ["0.0", "0.1", "0.25", "0.5"], 
+			'share_institutionals': ["0.0", "0.25", "0.5"], 
+			'recovery_halflife_retails': ["1.0", "5.0", "10.0"], 
+			'price_recovery_times': ["1e-06"], 
+			'l_factors': ["0.5", "1.0", "2.0", "4.0", "6.0"]},
+	"btc": {
+			'series_std_ratio': "0.78", 
+			'volume_for_slippage_10_percentss': ["250.0","500.0"], 
+			'trade_every': "1800", 
+			'collaterals': ["2500.0", "5000.0", "7500.0", "15000.0"], 
+			'liquidation_incentives': ["0.1"], 
+			'stability_pool_initial_balances': ["0.0", "0.1", "0.25", "0.5"], 
+			'share_institutionals': ["0.0", "0.25","0.5"], 
+			'recovery_halflife_retails': ["1.0", "5.0", "10.0"], 
+			'price_recovery_times': ["1e-06"], 
+			'l_factors': ["0.5", "1.0", "2.0", "4.0", "6.0"]
+	},
+	"eth":{
+			'series_std_ratio': "1", 
+			'volume_for_slippage_10_percentss': ["400.0", "800.0"], 
+			'trade_every': "1800", 
+			'collaterals': ["2500.0", "5000.0", "7500.0", "15000.0"],
+			'liquidation_incentives': ["0.1"],
+			'stability_pool_initial_balances': ["0.0", "0.1", "0.25", "0.5"], 
+			'share_institutionals': ["0.0", "0.25", "0.5"], 
+			'recovery_halflife_retails': ["1.0", "5.0", "10.0"], 
+			'price_recovery_times': ["1e-06"],
+			'l_factors': ["0.5", "1.0", "2.0", "4.0", "6.0"]
+	},
+	"tri":{
+			'series_std_ratio': "0.66",
+			'volume_for_slippage_10_percentss': ["750.0", "1500.0"],
+			'trade_every': "1800",
+			'collaterals': ["2500.0", "5000.0", "7500.0", "15000.0"],
+			'liquidation_incentives': ["0.1"],
+			'stability_pool_initial_balances': ["0.0", "0.1", "0.25", "0.5"],
+			'share_institutionals': ["0.0", "0.25", "0.5"],
+			'recovery_halflife_retails': ["1.0", "5.0", "10.0"],
+			'price_recovery_times': ["1e-06"],
+			'l_factors': ["0.5", "1.0", "2.0", "4.0", "6.0"]
+	}
+	
+}
+
+
+
+let a = 0
+let b = 0
+let c = 0
+let d = 0
+let e = 0
+const queryString = window.location.search;
+
+const urlParams = new URLSearchParams(queryString);
+
+if(urlParams.get('a') !== null) a = Number(urlParams.get('a'))
+if(urlParams.get('b') !== null) b = Number(urlParams.get('b'))
+if(urlParams.get('c') !== null) c = Number(urlParams.get('c'))
+if(urlParams.get('d') !== null) d = Number(urlParams.get('d'))
+if(urlParams.get('e') !== null) e = Number(urlParams.get('e'))
+
+const asset = urlParams.get('asset')
+const json = jsons[asset]
+
+const price_recovery_time = json["price_recovery_times"] //[0.5, 1.0, 2.0, 4.0, 10.0]
+const recovery_halflife_retail = json["recovery_halflife_retails"] //[1.0, 5.0, 10.0]
+const stability_pool_initial_balance_ratio = json["stability_pool_initial_balances"] //[0.0, 0.1, 0.5]
+const share_institutional = json["share_institutionals"] //[0.0, 0.25, 0.5]
+const slipage = json["volume_for_slippage_10_percentss"]
+
+console.log({a},{b},{c},{d},{e})
+const picture_name = "./" + asset + "/" + 
+"hm-price_recovery_time-" + price_recovery_time[a]+
+"-volume_for_slippage_10_percents-" + slipage[e] + 
+"-recovery_halflife_retail-" + recovery_halflife_retail[b] +
+"-stability_pool_initial_balance_ratio-" + stability_pool_initial_balance_ratio[c] + 
+"-share_institutional-" + share_institutional[d] + 
+".jpg"
+
+console.log(picture_name)
+
+function display_image(src, style, alt) {
+    // alert(src)
+	// if (!src.toString().includes("svg")){
+	// 	fields = src.split('/')[2].replace('.jpg','').replace("hm","")
+	// 	ff = fields.split('-')
+	// 	line = ""
+	// 	for(var f in ff)
+	// 	{
+	// 		line += ff[f] + " ";
+	// 	}
+	// 	var a = document.createElement("div");
+	// 	const newContent = document.createTextNode(line);
+	// 	a.appendChild(newContent)
+	// 	document.body.appendChild(a);
+	// }
+
+	var a = document.createElement("img");
+    a.src = src;
+    a.alt = alt;
+    a.style = style
+    document.body.appendChild(a);
+
+}
+
+display_image(picture_name, "width:800px;height:580px;margin: 0 auto; display: block;", 'img');
+document.write("<br>")                 
+
+display_image('usd.svg', "height: 20px; margin: 5px;", 'img');
+document.write("price_recovery_time: ")
+if(a > 0) document.write(buildLink("prev", a - 1,b,c,d,e,asset, price_recovery_time[a]))
+else document.write(buildDisabledLink("prev", price_recovery_time[a]))
+document.write(" | ")
+if(a < price_recovery_time.length - 1) document.write(buildLink("next", a + 1,b,c,d,e,asset,price_recovery_time[a]))
+else document.write(buildDisabledLink("next", price_recovery_time[a]))
+document.write("<br>")                 
+
+display_image('atom.svg', "height: 20px; margin: 5px;", 'img');
+document.write("recovery_halflife_retail: ")
+
+if(b > 0) document.write(buildLink("prev", a,b-1,c,d,e,asset, recovery_halflife_retail[b]))
+else document.write(buildDisabledLink("prev", recovery_halflife_retail[b]))
+document.write(" | ")
+if(b < recovery_halflife_retail.length - 1) document.write(buildLink("next", a,b+1,c,d,e,asset,recovery_halflife_retail[b]))
+else document.write(buildDisabledLink("next", recovery_halflife_retail[b]))
+document.write("<br>")                 
+
+display_image('pool.svg', "height: 20px; margin: 5px;", 'img');
+document.write("stability_pool_initial_balance_ratio: ")
+if(c > 0) document.write(buildLink("prev", a,b,c-1,d,e,asset, stability_pool_initial_balance_ratio[c]))
+else document.write(buildDisabledLink("prev", stability_pool_initial_balance_ratio[c]))
+document.write(" | ")
+if(c < stability_pool_initial_balance_ratio.length - 1) document.write(buildLink("next", a,b,c+1,d,e, asset, stability_pool_initial_balance_ratio[c]))
+else document.write(buildDisabledLink("next",stability_pool_initial_balance_ratio[c]))
+document.write("<br>")                 
+
+display_image('bpro.svg', "height: 20px; margin: 5px;", 'img');
+document.write("share_institutional: ")
+if(d > 0) document.write(buildLink("prev", a,b,c,d-1,e,asset, share_institutional[d]))
+else document.write(buildDisabledLink("prev", share_institutional[d]))
+document.write(" | ")
+if(d < share_institutional.length - 1) document.write(buildLink("next", a,b,c,d+1, e, asset, share_institutional[d]))
+else document.write(buildDisabledLink("next",share_institutional[d]))
+document.write("<br>")
+
+
+display_image('bpro.svg', "height: 20px; margin: 5px;", 'img');
+document.write("volume for 10 percents: ")
+if(e > 0) document.write(buildLink("prev", a,b,c,d, e-1,asset, slipage[e]))
+else document.write(buildDisabledLink("prev", slipage[e]))
+document.write(" | ")
+if(e < slipage.length - 1) document.write(buildLink("next", a,b,c,d, e+1,asset, slipage[e]))
+else document.write(buildDisabledLink("next",slipage[e]))
+document.write("<br>")
+
+
+function buildLink(text,a,b,c,d,e,asset, current) {
+	s = "<a href=\"?asset=" + asset.toString() + "&a=" + a.toString() + "&b=" + b.toString() + "&c=" + c.toString() + "&d=" + d.toString() + "&e=" + e.toString() +"\">" + text + "</a>"
+	if (text == "next")
+		s += "    <span> current: " + current + "</span>"
+
+	console.log({s})
+	return s
+}
+
+function buildDisabledLink(text, current) {
+	if (text == "next")
+		text += " current: " + current
+	const s = "<span disabled>" + text + "</span>"
+	console.log({s})
+	return s
+}
+
+function toFloat(number) {
+	if(number == 0.25) return 0.25
+	return parseFloat(number).toFixed(1)
+}
+
+</script>
+</body>
+</html>
